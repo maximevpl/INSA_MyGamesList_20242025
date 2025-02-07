@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.insa.mygamelist.R
+import kotlinx.serialization.Serializable
 
 /*
 Permet de récupérer tous les données présents dans les différents
@@ -53,11 +54,33 @@ object IGDB {
     }
 }
 
-data class Cover(val id: Long, val url: String)
-data class Game(val id: Long, val cover: Long, val first_release_date : Long, val genres: List<Int>, val name: String, val platforms: List<Int>, val summary: String, val total_rating: Double)
-data class Genre ( val id: Int, val name: String)
-data class PlatformLogo (val id : Int, val url: String )
-data class Platform (val id: Int, val name:String, val platform_logo: Int)
+data class Cover(
+    val id: Long,
+    val url: String)
+
+@Serializable
+data class Game(
+    val id: Long,
+    val cover: Long,
+    val first_release_date : Long,
+    val genres: List<Int>,
+    val name: String,
+    val platforms: List<Int>,
+    val summary: String,
+    val total_rating: Double)
+
+data class Genre (
+    val id: Int,
+    val name: String)
+
+data class PlatformLogo (
+    val id : Int,
+    val url: String )
+
+data class Platform (
+    val id: Int,
+    val name:String,
+    val platform_logo: Int)
 
 
 /*Fonction qui permet de récupérer l'url à partir du numéro
