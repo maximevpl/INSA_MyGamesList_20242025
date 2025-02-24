@@ -33,26 +33,28 @@ import com.insa.mygamelist.data.getCoverUrl
 import com.insa.mygamelist.data.getGenre
 
 @Composable
-fun GameListScreen(innerPadding: PaddingValues, navController: NavController){
+fun GameListScreen(innerPadding: PaddingValues, navController: NavController,onTitleChange: (String)->Unit){
     LazyColumn(
         modifier = Modifier
             .padding(innerPadding)
             .fillMaxSize()
     ){
         items(IGDB.games.size){i ->
-            GameItem(IGDB.games[i],navController)
+            GameItem(IGDB.games[i],navController,onTitleChange)
         }
     }
 }
 
 @Composable
-fun GameItem(game: Game,navController: NavController){
+fun GameItem(game: Game,navController: NavController, onTitleChange: (String) -> Unit){
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
-            .clickable {navController.navigate(route= GameDetailsRoute(game.id,game.cover,game.first_release_date, game.genres, game.name, game.platforms, game.summary,game.total_rating)) }
+            .clickable {
+                onTitleChange(game.name)
+                navController.navigate(route= GameDetailsRoute(game.id,game.cover,game.first_release_date, game.genres, game.name, game.platforms, game.summary,game.total_rating)) }
             .padding(16.dp)
     ){
         Row(
