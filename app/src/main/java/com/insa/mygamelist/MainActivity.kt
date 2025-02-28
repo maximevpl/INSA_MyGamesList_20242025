@@ -1,25 +1,16 @@
 package com.insa.mygamelist
 import Screen.GameDetailScreen
 import Screen.GameListScreen
+import Screen.GameListViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -28,7 +19,6 @@ import com.insa.mygamelist.data.IGDB
 import com.insa.mygamelist.ui.theme.MyGamesListTheme
 import kotlinx.serialization.Serializable
 
-@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
 
 
@@ -39,30 +29,20 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
-            var selectedTitle by remember { mutableStateOf("My Games List") }
-
-            val currentRoute = navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry).value?.destination?.route
-            if(currentRoute=="GameListRoute"){
-                selectedTitle ="My Games List"
-            }
-
             MyGamesListTheme {
-                Scaffold(
-                    topBar = {
-                    TopAppBar(
-                        colors = topAppBarColors(
-                        containerColor = Color.Magenta,
-                        titleContentColor = Color.Black,
-                    ),
-                        title = { Text(selectedTitle) }
-                        )
-                }, modifier = Modifier.fillMaxWidth()) { innerPadding ->
-                    Navigation(innerPadding){ newTitle ->
-                        selectedTitle = newTitle
-                    }
+                val navController = rememberNavController()
+                val viewModel:GameListViewModel = viewModel()
 
+                NavHost(navController, startDestination = GameListRoute) {
+                    composable<GameListRoute> {
+                        GameListScreen(navController, viewModel)
+                    }
+                    composable<GameDetailsRoute> { backStackEntry ->
+                        val gameDetails = backStackEntry.toRoute<GameDetailsRoute>()
+                        GameDetailScreen(gameDetails, navController)
+                    }
                 }
+
             }
         }
     }
@@ -80,25 +60,9 @@ data class GameDetailsRoute(val id: Long,
                             val name: String,
                             val platforms: List<Int>,
                             val summary: String,
-                            val total_rating: Double)
+                            val total_rating: Double,
+                            val isFavorite:Boolean)
 
 
-@Composable
-fun Navigation(innerPadding:PaddingValues, onTitleChange:(String) ->Unit){
-    val navController = rememberNavController()
 
-    NavHost(navController, startDestination = GameListRoute){
-        composable<GameListRoute> {
-            onTitleChange("My Games List") // Réinitialise le titre en revenant sur la page d'acceuil
-            GameListScreen(innerPadding, navController, onTitleChange)
-        }
-        composable<GameDetailsRoute> { backStackEntry ->
-            val gameDetails = backStackEntry.toRoute<GameDetailsRoute>()
-            onTitleChange(gameDetails.name)
-            GameDetailScreen(gameDetails, innerPadding )
-        }
-    }
-
-
-}
 
