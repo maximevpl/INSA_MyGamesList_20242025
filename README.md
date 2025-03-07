@@ -1,4 +1,4 @@
-Projet réalisé en 3 ème année à l'INSA de Rennes en spécialité informatique dans le cadre de l'option programmation mobile.
+#Projet réalisé en 3 ème année à l'INSA de Rennes en spécialité informatique dans le cadre de l'option programmation mobile.
 
 Objectif : Découverte du language kotlin et de la programmation mobile à l'aide de Android Studio avec la bibliothèque Jetpack Compose.
 
