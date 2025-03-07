@@ -14,7 +14,7 @@
 - **Séance 4 :** Développement du second écran qui détail un jeu : affichage des données contenues dans les fichiers JSON récupérées par des fonctions composables.
            Création de la fonction GameDetailScreen et des fonctions de getter pour récupérer les données.
            Création d'une liste déroulante pour afficher les logos des plateformes, 
-           Bonus : mise en place d'un fond noir afin que chaque photo aient la même forme (je n'ai pas réussi à centrer la liste sur la page lorsque le nombre de logo est restreint).
+           Bonus : mise en place d'un fond noir afin que chaque photo aient la même forme et centrage des images lorsque le nombre d'images est petit.
 
 - **Séance 5 :** Mise en place d'une barre de recherche dans l'AppBar de l'écran d'accueil.
            Sauvegarde de la recherche lors d'un retour en arrière.
