@@ -6,10 +6,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,40 +15,42 @@ import com.insa.mygamelist.data.IGDB
 import com.insa.mygamelist.ui.theme.MyGamesListTheme
 import kotlinx.serialization.Serializable
 
+/*
+Activité principale de l'application
+ */
 class MainActivity : ComponentActivity() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        // Chargement des données JSON au démarrage de l'application
         IGDB.load(this)
-
         enableEdgeToEdge()
         setContent {
             MyGamesListTheme {
-                val navController = rememberNavController()
-                val viewModel:GameListViewModel = viewModel()
+                val navController = rememberNavController()// Création du contrôleur de navigation
+                val viewModel:GameListViewModel = viewModel()// Initialisation du ViewModel
 
+                // Définition du NavHost pour gérer la navigation entre les écrans
                 NavHost(navController, startDestination = GameListRoute) {
+                    // Écran principal qui affiche la liste des jeux
                     composable<GameListRoute> {
                         GameListScreen(navController, viewModel)
                     }
+                    //Écran secondaire qui affiche le détail d'un jeu
                     composable<GameDetailsRoute> { backStackEntry ->
                         val gameDetails = backStackEntry.toRoute<GameDetailsRoute>()
                         GameDetailScreen(gameDetails, navController)
                     }
                 }
-
             }
         }
     }
 }
 
-
-@Serializable
+// Définition des routes de navigation
+@Serializable // Route pour la liste des jeux
 object GameListRoute
 
-@Serializable
+@Serializable // Route pour le détail d'un jeu
 data class GameDetailsRoute(val id: Long,
                             val cover: Long,
                             val first_release_date : Long,
